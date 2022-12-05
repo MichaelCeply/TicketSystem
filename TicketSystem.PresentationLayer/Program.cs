@@ -15,28 +15,28 @@ namespace TicketSystem.PresentationLayer
             bool RunFlag = true; 
             while(RunFlag)
             {
-                bool ULogFlag = true, UDoStuffFlag = true, URegFlag = true;
                 string? pressed = ConsoleCmd.Hello();
                 ConsoleCmd.Clear();
                 if (pressed == "1")
                 {
-                    while(ULogFlag)
+                    int id = 0;
+                    bool log = ConsoleCmd.UserLogin(out id);
+                    if (log)
                     {
-                        bool exit = false;
-                        bool again = ConsoleCmd.UserLogin(out exit);
-                        if (exit == true) ULogFlag = false; UDoStuffFlag = false;
-                        if (again == true) ULogFlag = false;
+                        ConsoleCmd.TimeTable(id);
                     }
                 }
                 else if(pressed == "2")
                 {
-                    while(URegFlag)
-                    {
-                        bool exit = false;
-                        bool again = ConsoleCmd.Register(out exit);
-                        if (exit == true) ULogFlag = false; UDoStuffFlag = false;
-                        if (again == true) URegFlag = false;
-                    }
+                    int id = 0;
+                    bool reg = ConsoleCmd.Register(out id);
+                    if(reg) { ConsoleCmd.TimeTable(id); }
+                }
+                else if(pressed == "3")
+                {
+                    int id = 0;
+                    bool log = ConsoleCmd.WLogin(out id);
+                    if (log) { ConsoleCmd.Credits(id); }
                 }
                 else RunFlag = false;
             } 

@@ -17,7 +17,7 @@ namespace TicketSystem.ApplicationLayer
             var userDataEmail = gw.GetByEmail(email);
             if (userDataEmail.Rows.Count != 0) return -2;
             if(password.Length>8 && password.Any(char.IsDigit) ) return -3;
-            int id = gw.GetAll().Rows.Count + 1;
+            int id = gw.GetAll().Rows.Count;
             gw.AddCustomer(id,username,email,password);
             return id;
         }

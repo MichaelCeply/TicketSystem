@@ -11,8 +11,8 @@ namespace TicketSystem.ApplicationLayer
     {
         public static int Execute(string username, string password)
         {
-            CustomerTableDataGW gw = new CustomerTableDataGW();
-            var userData = gw.GetByUsername(username);
+            WorkerTDG gw = new WorkerTDG();
+            var userData = gw.GetByName(username);
             if (userData.Rows.Count == 0) return -1;
             var userRow = userData.Rows[0];
             var user = new WorkerDTO()

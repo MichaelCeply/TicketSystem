@@ -10,6 +10,6 @@ namespace TicketSystem.ApplicationLayer
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public decimal Money { get; set; }
+        public int Money { get; set; }
     }
 }

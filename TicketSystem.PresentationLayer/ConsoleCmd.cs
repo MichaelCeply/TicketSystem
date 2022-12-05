@@ -30,76 +30,180 @@ namespace TicketSystem.PresentationLayer
         {
             Console.Clear();
         }
-        public static bool UserLogin(out bool exit)
+        public static bool UserLogin(out int id)
         {
-            exit = false;
-            Console.WriteLine("Zadej uzivatelske jmeno nebo exit pro vraceni zpet:");
-            string name = Console.ReadLine();
-            if (name == "exit")
+            while (true)
             {
-                exit = true;
-                return false;
+                id = 0;
+                Console.WriteLine("Zadej uzivatelske jmeno nebo exit pro vraceni zpet:");
+                string name = Console.ReadLine();
+                if (name == "exit")
+                {
+                    return false;
+                }
+                Console.WriteLine("Zadej heslo:");
+                string password = Console.ReadLine();
+                id = CustomerLogin.Execute(name, password);
+                if (id > 0)
+                {
+                    ConsoleCmd.Clear();
+                    Console.WriteLine($"Zakaznik {id} prihlasen!");
+                    return true;
+                }
+                if (id == -1)
+                {
+                    ConsoleCmd.Clear();
+                    Console.WriteLine("Spatne jmeno!");
+                }
+                if (id == -2)
+                {
+                    ConsoleCmd.Clear();
+                    Console.WriteLine("Spatne heslo!");
+                }
             }
-            Console.WriteLine("Zadej heslo:");
-            string password = Console.ReadLine();
-            int res = CustomerLogin.Execute(name, password);
-            if (res > 0)
-            {
-                ConsoleCmd.Clear();
-                Console.WriteLine($"Zakaznik {res} prihlasen!");
-                return true;
-            }
-            if (res == -1) 
-            {
-                ConsoleCmd.Clear();
-                Console.WriteLine("Spatne jmeno!");
-                return false;
-            }
-            if (res == -2)
-            {
-                ConsoleCmd.Clear();
-                Console.WriteLine("Spatne heslo!");
-                return false;
-            }
-            else return false;
         }
-        public static bool Register(out bool exit)
+        public static bool Register(out int id)
         {
-            Console.WriteLine("Registrace\n");
-            exit = false;
-            Console.WriteLine("Zadej jmeno nebo exit pro ukonceni:");
-            string name = Console.ReadLine();
-            if (name == "exit") { exit = true; return false; }
-            Console.WriteLine("Zadej email:");
-            string email = Console.ReadLine();
-            Console.WriteLine("Zadej heslo:");
-            string password = Console.ReadLine();
-            int res = Registration.Execute(name,email, password);
-            if (res > 0)
+            while (true)
             {
-                ConsoleCmd.Clear();
-                Console.WriteLine($"Zakaznik {res} registrovan!");
-                return true;
+                Console.WriteLine("Registrace\n");
+                Console.WriteLine("Zadej jmeno nebo exit pro ukonceni:");
+                string name = Console.ReadLine();
+                if (name == "exit") { id = 0; return false; }
+                Console.WriteLine("Zadej email:");
+                string email = Console.ReadLine();
+                Console.WriteLine("Zadej heslo:");
+                string password = Console.ReadLine();
+                id = Registration.Execute(name, email, password);
+                if (id > 0)
+                {
+                    ConsoleCmd.Clear();
+                    Console.WriteLine($"Zakaznik {id} registrovan!");
+                    return true;
+                }
+                if (id == -1)
+                {
+                    ConsoleCmd.Clear();
+                    Console.WriteLine("Jiz pouzivane jmeno!");
+                }
+                if (id == -2)
+                {
+                    ConsoleCmd.Clear();
+                    Console.WriteLine("Jiz pouzivany email!");
+                }
+                if (id == -3)
+                {
+                    ConsoleCmd.Clear();
+                    Console.WriteLine("Slabe heslo!");
+                }
             }
-            if (res == -1)
+        }
+
+        public static bool TimeTable(int id)
+        {
+            while (true)
             {
-                ConsoleCmd.Clear();
-                Console.WriteLine("Jiz pouzivane jmeno!");
-                return false;
+                Console.WriteLine("Pocatecni stanice:");
+                string start = Console.ReadLine();
+                if (start == "exit")
+                {
+                    return false;
+                }
+                Console.WriteLine("Cilova stanice:");
+                string end = Console.ReadLine();
+                Console.WriteLine("Cas odjezdu:");
+                string time = Console.ReadLine();
+
+                List<string>? trains = ShowTrains.Execute(id, start, end, time, out int res);
+                if (res == 0)
+                {
+                    ConsoleCmd.Clear();
+                    if (trains.Count == 0) Console.WriteLine($"Nenalezeny zadne spoje");
+                    else
+                    {
+                        foreach (string st in trains)
+                        {
+                            Console.WriteLine(st);
+                        }
+                    }
+                }
+                if (res == -1)
+                {
+                    ConsoleCmd.Clear();
+                    Console.WriteLine("Spatna vychozi stanice!");
+                }
+                if (res == -2)
+                {
+                    ConsoleCmd.Clear();
+                    Console.WriteLine("Spatna cilopva stanice!");
+                }
             }
-            if (res == -2)
+        }
+
+        public static bool WLogin(out int id)
+        {
+            while (true)
             {
-                ConsoleCmd.Clear();
-                Console.WriteLine("Jiz pouzivany email!");
-                return false;
+                id = 0;
+                Console.WriteLine("Zadej uzivatelske jmeno nebo exit pro vraceni zpet:");
+                string name = Console.ReadLine();
+                if (name == "exit")
+                {
+                    return false;
+                }
+                Console.WriteLine("Zadej heslo:");
+                string password = Console.ReadLine();
+                id = WorkerLogin.Execute(name, password);
+                if (id > 0)
+                {
+                    ConsoleCmd.Clear();
+                    Console.WriteLine($"Zamestnanec {id} prihlasen!");
+                    return true;
+                }
+                if (id == -1)
+                {
+                    ConsoleCmd.Clear();
+                    Console.WriteLine("Spatne jmeno!");                  
+                }
+                if (id == -2)
+                {
+                    ConsoleCmd.Clear();
+                    Console.WriteLine("Spatne heslo!");                   
+                }
             }
-            if(res == -3)
+        }
+        public static bool Credits(int id)
+        {
+            while (true)
             {
-                ConsoleCmd.Clear();
-                Console.WriteLine("Slabe heslo!");
-                return false;
+                Console.WriteLine("Nabijeni kreditu");
+                Console.WriteLine("Jmeno uzivatele:");
+                string name = Console.ReadLine();
+                if (name == "exit")
+                {
+                    return false;
+                }
+                Console.WriteLine("Vlozene penize");
+                string moneyS = Console.ReadLine();
+                if (!moneyS.All(char.IsDigit)) { Console.WriteLine("Spatny format"); return false; }
+                int money = Convert.ToInt32(moneyS);
+                int res = AddCredits.Execute(id, name, money);
+                if (res > 0)
+                {
+                    ConsoleCmd.Clear();
+                    Console.WriteLine($"Zamestnanec {res} prihlasen!");
+                }
+                if (res == -1)
+                {
+                    ConsoleCmd.Clear();
+                    Console.WriteLine("Zaporne mnozstvi penez");
+                }
+                if (res == -2)
+                {
+                    ConsoleCmd.Clear();
+                    Console.WriteLine("Uzivatel neexistuje!");
+                }
             }
-            else return false;
         }
     }
 }
